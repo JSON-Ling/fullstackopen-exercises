@@ -16,17 +16,39 @@ const StatisticLine = (props) => {
 
 const Statistics = (props) => {
     const average =  (props.goodval - props.badval) / 9
-
+    const positiveVotes = (100 * props.goodval) / 9
     const total = props.goodval + props.badval + props.neutralval
 
+    if (total === 0) {
+        return (
+            <div>
+                No feedback given.
+            </div>
+        )
+    }
     return (
-        <>
-            <StatisticLine text="good" value={props.goodval} />
-            <StatisticLine text="neutral" value={props.neutralval}/>
-            <StatisticLine text="bad" value={props.badval} />
-            <StatisticLine text="total" value={total} />
-            <StatisticLine text="average" value={average}/>
-        </>
+        <table>
+            <tbody>
+                <tr>
+                    <td><StatisticLine text="good" value={props.goodval}/></td>
+                </tr>
+                <tr>
+                    <td><StatisticLine text="neutral" value={props.neutralval}/></td>
+                </tr>
+                <tr>
+                    <td><StatisticLine text="bad" value={props.badval}/></td>
+                </tr>
+                <tr>
+                    <td><StatisticLine text="total" value={total}/></td>
+                </tr>
+                <tr>
+                    <td><StatisticLine text="average (%)" value={average}/></td>
+                </tr>
+                <tr>
+                    <td><StatisticLine text="positive votes (%)" value={positiveVotes}/></td>
+                </tr>
+            </tbody>
+        </table>
 
     )
 }
@@ -55,12 +77,9 @@ const App = () => {
     return (
         <div>
             <Header text="Give feedback"/>
-            {good}
-            <Button handleClick={handleGood} text="Set good"/>
-            {neutral}
-            <Button handleClick={handleNeutral} text="Set neutral" />
-            {bad}
-            <Button handleClick={handleBad} text="Set bad"/>
+            <Button handleClick={handleGood} text="Good"/>
+            <Button handleClick={handleNeutral} text="Neutral" />
+            <Button handleClick={handleBad} text="Bad"/>
             <Header text="Statistics" />
             <Statistics goodval={good} badval={bad} neutralval={neutral}/>
         </div>
