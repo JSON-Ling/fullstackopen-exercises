@@ -68,7 +68,6 @@ const App = () => {
             {/*display as one component, pass anecdotes and points to component*/}
             <AnecdoteMain anecdotes={anecdotes} selected={selected} votes={points}/>
 
-
             <Button handleClick={getRandom} text="next anecdote" />
             <Button handleClick={castVote} text="vote"/>
 
