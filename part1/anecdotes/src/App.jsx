@@ -9,6 +9,28 @@ const Button = (props) => {
     )
 }
 
+const Header = (props) => <h1>{props.text}</h1>
+
+const AnecdoteMain = (props) => {
+    return (
+        <div>
+            <Header text="Anecdote of the day" />
+            <p>{props.anecdotes[props.selected]}</p>
+            <p>Has {props.votes[props.selected]} votes</p>
+        </div>
+    )
+}
+
+const AnecdoteMax = ({text, votes}) => {
+    return (
+        <div>
+            <Header text="Anecdote with the most votes"/>
+            <p>{text}</p>
+            <p>Has {votes} votes</p>
+        </div>
+    )
+}
+
 const App = () => {
     const anecdotes = [
         'If it hurts, do it more often.',
@@ -24,12 +46,12 @@ const App = () => {
     const [selected, setSelected] = useState(0)
     const [points, setPoints] = useState(Array(anecdotes.length).fill(0))
 
+
     const getRandom = () => {
         const randVal = Math.floor(Math.random() * (anecdotes.length)) //get random number based on length of array
         setSelected(randVal)
-        // console.log("random num " + selected)
-        // console.log("length of array " + anecdotes.length)
         console.log(selected)
+
     }
 
     const castVote = () => {
@@ -38,15 +60,19 @@ const App = () => {
         pointsCopy[selected] = pointsCopy[selected] + 1
         setPoints(pointsCopy)
         console.log(pointsCopy)
-
         // add votes to selected
     }
 
     return (
         <div>
-            {anecdotes[selected]}
+            {/*display as one component, pass anecdotes and points to component*/}
+            <AnecdoteMain anecdotes={anecdotes} selected={selected} votes={points}/>
+
+
             <Button handleClick={getRandom} text="next anecdote" />
             <Button handleClick={castVote} text="vote"/>
+
+            <AnecdoteMax text={anecdotes[points.indexOf(Math.max(...points))]} votes={Math.max(...points)}/>
         </div>
     )
 }
