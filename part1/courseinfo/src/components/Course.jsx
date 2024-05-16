@@ -17,17 +17,15 @@ const Part = (props) => {
 
 const Content = ({parts}) => {
     return (
-        <>
+        <div>
             {
                 parts.map(
                     (item) => (
-                        <>
-                            <Part name={item.name} exercises={item.exercises} />
-                        </>
+                        <Part key={item.id} name={item.name} exercises={item.exercises} />
                     )
                 )
             }
-        </>
+        </div>
     )
 }
 
@@ -44,16 +42,23 @@ const Total = ({parts}) => {
 }
 
 const Course = ({course}) => {
-    return (
-        <div>
-            <Header course={course[0].name} />
-            <Content parts={course[0].parts}/>
-            <Total parts={course[0].parts}/>
 
-            <Header course={course[1].name} />
-            <Content parts={course[1].parts} />
-            <Total parts={course[1].parts}/>
-        </div>
+    return (
+        <>
+            {
+                course.map(
+                    (item) => {
+                        return (
+                            <div key={item.id}>
+                                <Header course={item.name}/>
+                                <Content parts={item.parts}/>
+                                <Total parts={item.parts}/>
+                            </div>
+                        )
+                    }
+                )
+            }
+        </>
 
     )
 }

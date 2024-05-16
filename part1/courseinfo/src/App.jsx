@@ -35,12 +35,28 @@ const App = () => {
                 {
                     name: 'Routing',
                     exercises: 3,
-                    id: 2
+                    id: 5
                 },
                 {
                     name: 'Middlewares',
                     exercises: 7,
-                    id: 2
+                    id: 6
+                }
+            ]
+        },
+        {
+            name: 'Express.js',
+            id: 3,
+            parts: [
+                {
+                    name: 'Routing',
+                    exercises: 10,
+                    id: 7
+                },
+                {
+                    name: 'Middlewares',
+                    exercises: 8,
+                    id: 8
                 }
             ]
         }
