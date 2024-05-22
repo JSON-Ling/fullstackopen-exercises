@@ -44,7 +44,7 @@ const App = () => {
         setNewNum(event.target.value) //set new num to the input given
     }
 
-    const filteredResults = persons.filter(person => person.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    const filteredResults = persons.filter(person => person.name.toLowerCase().includes(searchTerm.toLowerCase())) //if search term is an empty string, all entries in the persons array pass the filter function and thus will display all contacts.
 
     const filterName = (event) => {
         setSearchTerm(event.target.value)
