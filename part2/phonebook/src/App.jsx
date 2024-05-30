@@ -1,50 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from "axios";
 
-const App = () => {
-    const [persons, setPersons] = useState([
-        { name: 'Arto Hellas', number: '040-1234567', id: 1},
-        { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-        { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-        { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-    ])
-    const [newName, setNewName] = useState('')
-    const [newNum, setNewNum] = useState('')
+const Phonebook = ({ persons, newPerson, onChange, onSubmit }) => {
     const [searchTerm, setSearchTerm] = useState('')
 
-    const resetNewPerson = () => {
-        setNewName('') //reset value of new name to erase duplicate name
-        setNewNum('') //reset value of new number to erase duplicate number
-    }
-    const addName = (event) => {
-
-        event.preventDefault()
-        if (persons.some(person => person.name === newName)) {
-            alert(`${newName} is already added to the phonebook`)
-            // don't concat the new person and instead generate alert of duplicate
-            resetNewPerson() // reset the new person
-        }
-        else {
-            const nameObject = {
-                name: newName,
-                number: newNum,
-                id: persons.length + 1,
-            }
-
-            setPersons(persons.concat(nameObject)) //set value of new name to be added to Person array
-            resetNewPerson() //erase the new person
-        } //concat the new name to person and reset value of new name state
-
-    }
-
-    const handleNameChange = (event) => {
-        setNewName(event.target.value) //set new name to the input given
-    }
-
-    const handleNumChange = (event) => {
-        setNewNum(event.target.value) //set new num to the input given
-    }
-
-    const filteredResults = persons.filter(person => person.name.toLowerCase().includes(searchTerm.toLowerCase())) //if search term is an empty string, all entries in the persons array pass the filter function and thus will display all contacts.
+    //if search term is an empty string, all entries in the persons array pass the filter function and thus will display all contacts.
+    const filteredResults = persons.filter(person => person.name.toLowerCase().includes(searchTerm.toLowerCase()))
 
     const filterName = (event) => {
         setSearchTerm(event.target.value)
@@ -57,9 +18,9 @@ const App = () => {
                 filter: <input onChange={filterName}/>
             </div>
             <h2>Add new contact</h2>
-            <form onSubmit={addName}>
-                <div> name: <input value={newName} onChange={handleNameChange}/> </div>
-                <div> number: <input value={newNum} onChange={handleNumChange} /> </div>
+            <form onSubmit={onSubmit}>
+                <div> name: <input name='name' value={newPerson.name} onChange={onChange}/></div>
+                <div> number: <input name='number' value={newPerson.number} onChange={onChange}/></div>
                 <div>
                     <button type="submit">add</button>
                 </div>
@@ -74,6 +35,60 @@ const App = () => {
                 }
             </div>
         </div>
+    )
+
+}
+
+const App = () => {
+    const [persons, setPersons] = useState([])
+    const [newPerson, setNewPerson] = useState({name: '', number: ''})
+
+    const resetNewPerson = () => {
+        setNewPerson({name: '', number: ''}) //reset value of new name to erase duplicate name
+    }
+
+    useEffect(() => {
+        axios
+            .get('http://localhost:3001/persons')
+            .then(
+                response => {
+                    setPersons(response.data)
+                }
+            )
+    }, []);
+
+    const handleAddPerson = (event) => {
+
+        event.preventDefault()
+        if (persons.some(person => person.name.toLowerCase() === newPerson.name.toLowerCase())) {
+            alert(`${newPerson.name} is already added to the phonebook`)
+        } else {
+            setPersons(
+                persons.concat({
+                    ...newPerson,
+                    id: persons.length + 1,
+                })
+            ) //set value of new name to be added to Person array
+        } //concat the new name to person and reset value of new name state
+
+        resetNewPerson() //erase the new person
+    }
+
+    const handleChange = (event) => {
+        if (event.target.name === 'name') {
+            setNewPerson({...newPerson, name: event.target.value})
+        } else if (event.target.name === 'number') {
+            setNewPerson({...newPerson, number: event.target.value})
+        }
+    }
+
+    return (
+        <Phonebook
+            persons={persons}
+            newPerson={newPerson}
+            onChange={handleChange}
+            onSubmit={handleAddPerson}
+        />
     )
 }
 
