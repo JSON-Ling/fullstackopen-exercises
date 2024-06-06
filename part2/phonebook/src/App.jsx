@@ -36,7 +36,6 @@ const Phonebook = ({ persons, newPerson, onChange, onSubmit }) => {
             </div>
         </div>
     )
-
 }
 
 const App = () => {
@@ -63,14 +62,14 @@ const App = () => {
         if (persons.some(person => person.name.toLowerCase() === newPerson.name.toLowerCase())) {
             alert(`${newPerson.name} is already added to the phonebook`)
         } else {
-            setPersons(
-                persons.concat({
-                    ...newPerson,
-                    id: persons.length + 1,
+            axios
+                .post('http://localhost:3001/persons', newPerson)
+                .then(response => {
+                    setPersons(
+                        persons.concat(response.data)
+                    )
                 })
-            ) //set value of new name to be added to Person array
-        } //concat the new name to person and reset value of new name state
-
+        }
         resetNewPerson() //erase the new person
     }
 
