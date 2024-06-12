@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from "axios";
+import personsServer from "./services/persons-server.jsx";
 
 const Phonebook = ({ persons, newPerson, onChange, onSubmit }) => {
     const [searchTerm, setSearchTerm] = useState('')
@@ -47,13 +48,11 @@ const App = () => {
     }
 
     useEffect(() => {
-        axios
-            .get('http://localhost:3001/persons')
-            .then(
-                response => {
-                    setPersons(response.data)
-                }
-            )
+        personsServer
+            .getAll()
+            .then(initNotes => {
+                setPersons(initNotes)
+            })
     }, []);
 
     const handleAddPerson = (event) => {
@@ -62,11 +61,11 @@ const App = () => {
         if (persons.some(person => person.name.toLowerCase() === newPerson.name.toLowerCase())) {
             alert(`${newPerson.name} is already added to the phonebook`)
         } else {
-            axios
-                .post('http://localhost:3001/persons', newPerson)
-                .then(response => {
+            personsServer
+                .create(newPerson)
+                .then(returnedPerson => {
                     setPersons(
-                        persons.concat(response.data)
+                        persons.concat(returnedPerson)
                     )
                 })
         }

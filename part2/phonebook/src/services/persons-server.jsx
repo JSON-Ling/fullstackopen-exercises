@@ -5,10 +5,13 @@ const getAll = () => {
     return request.then(response => response.data)
 }
 
-const create = (id, newPerson) => {
-    const request = axios.put(baseURL, newPerson)
+const create = newPerson => {
+    const request = axios.post(baseURL, newPerson)
+    return request.then(response => response.data)
 }
 
 const deletePerson = (id, newPerson) => {
     const request = axios.put(baseURL, newPerson)
 }
+
+export default { getAll, create, deletePerson }
